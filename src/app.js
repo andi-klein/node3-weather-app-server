@@ -8,7 +8,6 @@ const weather = require("./utils/weather");
 
 const app = express();
 
-
 //Define paths for Express config
 const viewsPath = path.join(__dirname, "../templates/views");
 const partialsPath = path.join(__dirname, "../templates/partials");
