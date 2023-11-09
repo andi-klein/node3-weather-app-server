@@ -7,6 +7,8 @@ const weather = (latitude, longitude, callback) => {
     "," +
     longitude;
 
+    console.log(url);
+
   request({ url, json: true }, (error, {body}) => {
     if (error) {
       callback("Unable to connector to weather API. Cause: " + error),
@@ -21,10 +23,12 @@ const weather = (latitude, longitude, callback) => {
 
     const temperature = body.current.temperature;
     const location = body.location.name;
+    const descriptions = body.current.weather_descriptions;
+    const icons = body.current.weather_icons;
 
     //console.log(`Current temperature in ${location} is ${temperature}℃`);
 
-    callback(undefined, { location, temperature });
+    callback(undefined, { location, temperature, descriptions, icons });
   });
 };
 

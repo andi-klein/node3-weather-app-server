@@ -46,56 +46,60 @@ app.get("/help", (req, res) => {
 app.get("/weather", (req, res) => {
   const address = req.query.address;
 
-  if(!address) {
-    return res.send({error: "You must provide an address!"})
+  if (!address) {
+    return res.send({ error: "You must provide an address!" });
   }
 
-  geocode(address, (error, {latitude, longitude, place} = {}, callback) => {
+  geocode(address, (error, { latitude, longitude, place } = {}, callback) => {
     if (error) {
-      return res.send({error});
+      return res.send({ error });
     }
-  
+
     console.log("Getting weather data for " + place);
-  
-    weather(latitude, longitude, (error, {location, temperature} = {}) => {
-      if (error) {
-        return res.send({error});
+
+    weather(
+      latitude,
+      longitude,
+      (error, { location, temperature, descriptions, icons } = {}) => {
+        if (error) {
+          return res.send({ error });
+        }
+
+        console.log(`Current temperature in ${location} is ${temperature}℃`);
+
+        res.send({
+          address,
+          location: place,
+          temperature,
+          descriptions,
+          icons,
+        });
       }
-  
-      console.log(
-        `Current temperature in ${location} is ${temperature}℃`
-      );
-
-      res.send({
-        address, 
-        location: place, 
-        temperature});
-
-    });
+    );
   });
 });
 
 app.get("/products", (req, res) => {
   console.log(req.query);
-  res.send({products: []})
-})
+  res.send({ products: [] });
+});
 
-app.get('/help/*', (req, res) => {
-    res.render("404", {
-        title: "404 Not Found",
-        errorMessage: "Help article not found",
-        author: "Andi Klein",
-      });
-})
+app.get("/help/*", (req, res) => {
+  res.render("404", {
+    title: "404 Not Found",
+    errorMessage: "Help article not found",
+    author: "Andi Klein",
+  });
+});
 
-app.get('*', (req, res) => {
-    res.render("404", {
-        title: "404 Not Found",
-        errorMessage: "Page not found",
-        author: "Andi Klein",
-      });
-})
+app.get("*", (req, res) => {
+  res.render("404", {
+    title: "404 Not Found",
+    errorMessage: "Page not found",
+    author: "Andi Klein",
+  });
+});
 
 app.listen(port, () => {
-  console.log("Server is up on port "+port);
+  console.log("Server is up on port " + port);
 });
